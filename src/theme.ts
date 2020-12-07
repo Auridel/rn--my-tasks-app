@@ -11,7 +11,7 @@ export const mainTheme: ReactNativePaper.Theme = {
         text: "black",
         onBackground: '#000000',
         onSurface: '#000000',
-        disabled: "rgba(0, 0, 0, .26)",
+        disabled: "rgba(0, 0, 0, .46)",
         placeholder: "rgba(0, 0, 0, .54)",
         backdrop: "rgba(0, 0, 0, .5)",
         notification: "pink",

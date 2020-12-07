@@ -1,4 +1,6 @@
-export const data = [
+import {Data} from "./types";
+
+export const data: Data[] = [
     {
         id: 206,
         title: "Семья",

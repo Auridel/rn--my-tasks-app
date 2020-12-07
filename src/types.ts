@@ -3,15 +3,15 @@ export interface Todo {
     text: string,
     list_id: number,
     checked: boolean,
-    created_at: Date,
-    updated_at: Date
+    created_at: string,
+    updated_at: string
 }
 
 export interface Data {
     id: number,
     title: string,
     candidate_id: number,
-    created_at: Date,
-    updated_at: Date,
+    created_at: string,
+    updated_at: string,
     todos: Todo[]
 }
