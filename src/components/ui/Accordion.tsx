@@ -113,7 +113,7 @@ const Accordion = ({
                             style={[
                                 styles.title,
                                 {
-                                    color: isExpanded ? theme.colors.primary : titleColor,
+                                    color: titleColor,
                                 },
                                 titleStyle,
                             ]}

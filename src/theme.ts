@@ -7,7 +7,7 @@ export const mainTheme: ReactNativePaper.Theme = {
         accent: '#1779ff',
         background: '#fff',
         surface: "white",
-        error: '#B00020',
+        error: '#b56073',
         text: "black",
         onBackground: '#000000',
         onSurface: '#000000',
