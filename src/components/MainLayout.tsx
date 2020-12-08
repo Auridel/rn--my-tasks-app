@@ -3,7 +3,7 @@ import TaskScreen from "../screens/TaskScreen";
 import MainScreen from "../screens/MainScreen";
 
 const MainLayout: FC = () => {
-    const [taskId, setTaskId] = useState<null | number>(null);
+    const [taskId, setTaskId] = useState<null | number>(1);
 
     if(taskId) return <TaskScreen/>
 

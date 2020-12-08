@@ -1,5 +1,5 @@
 import React, {Dispatch, FC, SetStateAction, useState} from "react";
-import {FlatList, Text, View, StyleSheet, TouchableOpacity, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard} from "react-native";
+import {FlatList, Text, View, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard} from "react-native";
 import {List, Modal, TextInput} from "react-native-paper";
 import SwipeButton from "./ui/SwipeButton";
 import {mainTheme} from "../theme";
@@ -28,9 +28,8 @@ const ModalWindow: FC<Props> = ({modal, setModal, data}) => {
                }}
                dismissable>
             <KeyboardAvoidingView
-                behavior={"position"}
-                style={{}}
-                keyboardVerticalOffset={300}
+                behavior="position"
+                keyboardVerticalOffset={Platform.OS === "ios"? 300 : 0}
 
             >
                 <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -52,6 +51,7 @@ const ModalWindow: FC<Props> = ({modal, setModal, data}) => {
                                            placeholder="Введите название"
                                            value={text}
                                            onChangeText={setText}
+                                           autoFocus
                                 />
                                 <TouchableOpacity activeOpacity={0.7} onPress={() => console.log(text)}>
                                     <Icon name="check" size={25} color={mainTheme.colors.accent}/>

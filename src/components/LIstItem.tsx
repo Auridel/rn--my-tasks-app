@@ -31,7 +31,8 @@ const ItemList: FC<Props> = ({data, icon, completed,id, onSwipe}) => {
         <SwipeListView
             data={data}
             swipeToOpenPercent={15}
-
+            closeOnRowPress={false}
+            closeOnScroll={false}
             onScrollEnabled={(isEnabled) => onSwipe(isEnabled)}
             keyExtractor={item => `${item.id}`}
             listKey={id}

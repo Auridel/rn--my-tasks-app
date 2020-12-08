@@ -27,7 +27,7 @@ const Category: FC<Props> = ({title, todos, id, onSwipe}) => {
 
     return (
         <List.Section>
-            <View style={styles.list}>
+            <View>
                 <List.Subheader>{title}</List.Subheader>
                 <ListItem data={uncompletedTodos}  id={id.toString()} icon="checkbox-blank-circle-outline" completed={false} onSwipe={onSwipe}/>
                 <Accordion id={id.toString()}
@@ -46,9 +46,6 @@ const Category: FC<Props> = ({title, todos, id, onSwipe}) => {
 }
 
 const styles = StyleSheet.create({
-    list: {
-
-    },
     completedAccordion: {
         fontSize: 16,
         color: mainTheme.colors.text,
