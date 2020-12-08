@@ -1,5 +1,6 @@
 import React, {FC} from "react";
-import {TouchableOpacity, Platform, View, StyleSheet} from "react-native";
+import {TouchableOpacity, View, StyleSheet, ViewStyle} from "react-native";
+// @ts-ignore
 import Icon from 'react-native-vector-icons/Feather'
 
 type Props = {
@@ -7,7 +8,7 @@ type Props = {
     color: string,
     onPress: (id:number) => void,
     id: number,
-    buttonStyle: StyleSheetList
+    buttonStyle: ViewStyle
 }
 
 const SwipeButton: FC<Props> = ({icon, color, onPress, id, buttonStyle}) => {

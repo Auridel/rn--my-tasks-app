@@ -10,10 +10,11 @@ import ListItem from "./LIstItem";
 type Props = {
     title: string,
     todos: Todo[],
-    id: number
+    id: number,
+    onSwipe: (swipe:boolean) => void
 }
 
-const Category: FC<Props> = ({title, todos, id}) => {
+const Category: FC<Props> = ({title, todos, id, onSwipe}) => {
     const [expanded, setExpanded] = useState(false);
 
     const completedTodos = todos.filter(todo => todo.checked);
@@ -28,8 +29,8 @@ const Category: FC<Props> = ({title, todos, id}) => {
         <List.Section>
             <View style={styles.list}>
                 <List.Subheader>{title}</List.Subheader>
-                <ListItem data={uncompletedTodos} icon="checkbox-blank-circle-outline" completed={false}/>
-                <Accordion id={id}
+                <ListItem data={uncompletedTodos}  id={id.toString()} icon="checkbox-blank-circle-outline" completed={false} onSwipe={onSwipe}/>
+                <Accordion id={id.toString()}
                            title="Завершенные"
                            titleStyle={accordionTextStyle}
                            expanded={expanded}
@@ -37,7 +38,7 @@ const Category: FC<Props> = ({title, todos, id}) => {
                                if(completedEmpty) setExpanded(!expanded);
                            }}
                 >
-                    <ListItem data={completedTodos} icon="check" completed={true}/>
+                    <ListItem data={completedTodos} icon="check" id={"completed" + id.toString()} completed={true} onSwipe={onSwipe}/>
                 </Accordion>
             </View>
         </List.Section>
@@ -50,7 +51,8 @@ const styles = StyleSheet.create({
     },
     completedAccordion: {
         fontSize: 16,
-        color: mainTheme.colors.text
+        color: mainTheme.colors.text,
+        marginLeft: 15
     },
     emptyListLabel: {
         color: mainTheme.colors.disabled

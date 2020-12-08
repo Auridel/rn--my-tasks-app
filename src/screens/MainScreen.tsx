@@ -1,27 +1,46 @@
-import React, {FC} from "react";
-import {StyleSheet, View, Text, ScrollView} from "react-native";
+import React, {FC, useState} from "react";
+import {StyleSheet, View, Text, FlatList} from "react-native";
 import {Appbar, FAB} from "react-native-paper";
 import Category from "../components/Category";
+import ModalWindow from "../components/ModalWindow";
 import {data} from "../data";
 
+
 const MainScreen: FC = () => {
+    const [modal, setModal] = useState(true);
+    const [enableScroll, setEnableScroll] = useState(true);
+
+    const onSwipeEvent = (swiping: boolean): void => {
+        if(swiping !== enableScroll) {
+            setEnableScroll(swiping);
+        }
+    }
+
+
+
     return (
         <View style={styles.container}>
             <Appbar.Header style={styles.header}>
                 <Text style={styles.title}>Задачи</Text>
-                <Appbar.Action icon="shape-outline" onPress={() => console.log("shape")}/>
+                <Appbar.Action icon="shape-outline" onPress={() => setModal(!modal)}/>
             </Appbar.Header>
-            <ScrollView>
-                {data.map(item => <Category key={item.id}
-                                            title={item.title}
-                                            todos={item.todos}
-                                            id={item.id}/>)}
-            </ScrollView>
+            <FlatList data={data}
+                      scrollEnabled={enableScroll}
+                      keyExtractor={(item) => `root${item.id.toString()}`}
+                      renderItem={({item}) => <Category
+                                                        key={`${item.id.toString()}`}
+                                                        onSwipe={onSwipeEvent}
+                                                        title={item.title}
+                                                        todos={item.todos}
+                                                        id={item.id}/>}
+            />
             <FAB
+                visible={!modal}
                 style={styles.fab}
                 icon="plus"
                 onPress={() => console.log('Pressed')}
             />
+            <ModalWindow modal={modal} setModal={setModal} data={data}/>
         </View>
     )
 }
