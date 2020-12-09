@@ -1,13 +1,19 @@
 import React, {FC, useState} from "react";
 import TaskScreen from "../screens/TaskScreen";
 import MainScreen from "../screens/MainScreen";
+import {Todos} from "../classTransformer/classes";
+
 
 const MainLayout: FC = () => {
-    const [taskId, setTaskId] = useState<null | number>(1);
+    const [task, setTask] = useState<null | Todos>(null);
 
-    if(taskId) return <TaskScreen/>
+    const openTask = (todo: Todos | null): void => {
+        setTask(todo);
+    }
 
-    return <MainScreen/>
+    if(task) return <TaskScreen openTask={openTask} todo={task}/>
+
+    return <MainScreen openTask={openTask}/>
 
 }
 

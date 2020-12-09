@@ -2,19 +2,20 @@ import React, {FC, useState} from "react";
 import {StyleSheet, View} from "react-native";
 import {List} from "react-native-paper";
 import Accordion from "./ui/Accordion";
-import {Todo} from "../types";
+import {Todos} from "../classTransformer/classes";
 import {mainTheme} from "../theme";
 import ListItem from "./LIstItem";
 
 
 type Props = {
     title: string,
-    todos: Todo[],
+    todos: Todos[],
     id: number,
-    onSwipe: (swipe:boolean) => void
+    onSwipe: (swipe:boolean) => void,
+    openTask: (todo: Todos | null) => void
 }
 
-const Category: FC<Props> = ({title, todos, id, onSwipe}) => {
+const Category: FC<Props> = ({title, todos, id, onSwipe, openTask}) => {
     const [expanded, setExpanded] = useState(false);
 
     const completedTodos = todos.filter(todo => todo.checked);
@@ -29,7 +30,11 @@ const Category: FC<Props> = ({title, todos, id, onSwipe}) => {
         <List.Section>
             <View>
                 <List.Subheader>{title}</List.Subheader>
-                <ListItem data={uncompletedTodos}  id={id.toString()} icon="checkbox-blank-circle-outline" completed={false} onSwipe={onSwipe}/>
+                <ListItem data={uncompletedTodos}
+                          openTask={openTask}
+                          id={id.toString()}
+                          icon="checkbox-blank-circle-outline"
+                          completed={false} onSwipe={onSwipe}/>
                 <Accordion id={id.toString()}
                            title="Завершенные"
                            titleStyle={accordionTextStyle}
@@ -38,7 +43,7 @@ const Category: FC<Props> = ({title, todos, id, onSwipe}) => {
                                if(completedEmpty) setExpanded(!expanded);
                            }}
                 >
-                    <ListItem data={completedTodos} icon="check" id={"completed" + id.toString()} completed={true} onSwipe={onSwipe}/>
+                    <ListItem data={completedTodos} icon="check" id={"completed" + id.toString()} completed={true} onSwipe={onSwipe} openTask={openTask}/>
                 </Accordion>
             </View>
         </List.Section>

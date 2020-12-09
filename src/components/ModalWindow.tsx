@@ -3,16 +3,17 @@ import {FlatList, Text, View, StyleSheet, TouchableOpacity, KeyboardAvoidingView
 import {List, Modal, TextInput} from "react-native-paper";
 import SwipeButton from "./ui/SwipeButton";
 import {mainTheme} from "../theme";
-import {Data} from "../types";
 // @ts-ignore
 import Icon from "react-native-vector-icons/Feather";
+
+import {CategoryClass} from "../classTransformer/classes";
 
 
 
 type Props = {
     modal: boolean,
     setModal: Dispatch<SetStateAction<boolean>>,
-    data: Data[]
+    data: CategoryClass[] | []
 }
 
 const ModalWindow: FC<Props> = ({modal, setModal, data}) => {
@@ -34,7 +35,7 @@ const ModalWindow: FC<Props> = ({modal, setModal, data}) => {
             >
                 <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
                     <View style={styles.modalWrap}>
-                        <FlatList data={data} keyExtractor={(item) => `modal${item.id}`}
+                        {data.length? <FlatList data={data} keyExtractor={(item) => `modal${item.id}`}
                                   renderItem={({item}) => <List.Item
                                       title={item.title}
                                       right={() => <SwipeButton icon="trash-2"
@@ -43,7 +44,7 @@ const ModalWindow: FC<Props> = ({modal, setModal, data}) => {
                                                                 id={item.id}
                                                                 buttonStyle={{}}/>}
                                   />}
-                        />
+                        /> : null}
 
                         {banner &&
                             <View style={styles.inputWrap}>

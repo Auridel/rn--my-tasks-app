@@ -5,7 +5,6 @@ import {mainTheme} from "./src/theme";
 import store from "./src/redux/store";
 import MainLayout from "./src/components/MainLayout";
 
-
 export default function App() {
 
     return (

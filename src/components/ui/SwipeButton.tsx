@@ -3,21 +3,19 @@ import {TouchableOpacity, View, StyleSheet, ViewStyle} from "react-native";
 // @ts-ignore
 import Icon from 'react-native-vector-icons/Feather'
 
+import {Todos} from "../../classTransformer/classes";
+
 type Props = {
     icon: string,
     color: string,
-    onPress: (id:number) => void,
-    id: number,
     buttonStyle: ViewStyle
 }
 
-const SwipeButton: FC<Props> = ({icon, color, onPress, id, buttonStyle}) => {
+const SwipeButton: FC<Props> = ({icon, color, buttonStyle}) => {
 
     return (
             <View style={{...styles.wrapper, ...buttonStyle}}>
-                <TouchableOpacity activeOpacity={0.5} onPress={() => onPress(id)}>
-                    <Icon name={icon} size={25} color={color}/>
-                </TouchableOpacity>
+                <Icon name={icon} size={25} color={color}/>
             </View>
 
     )

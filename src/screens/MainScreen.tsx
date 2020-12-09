@@ -1,21 +1,43 @@
-import React, {FC, useState} from "react";
-import {StyleSheet, View, Text, FlatList} from "react-native";
-import {Appbar, FAB} from "react-native-paper";
+import React, {FC, useEffect, useState, useContext} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {StyleSheet, View, VirtualizedList} from "react-native";
+import {Appbar, FAB, Text} from "react-native-paper";
 import Category from "../components/Category";
 import ModalWindow from "../components/ModalWindow";
-import {data} from "../data";
+import {GET_DATA} from "../redux/actions";
+import {State} from "../types";
+import {CategoryClass, Todos} from "../classTransformer/classes";
+
+interface Props{
+    openTask: (todo: Todos | null) => void
+}
 
 
-const MainScreen: FC = () => {
-    const [modal, setModal] = useState(true);
+const MainScreen: FC<Props> = ({openTask}) => {
+    const [modal, setModal] = useState(false);
     const [enableScroll, setEnableScroll] = useState(true);
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(GET_DATA());
+    }, [])
 
     const onSwipeEvent = (swiping: boolean): void => {
         if(swiping !== enableScroll) {
-            setEnableScroll(swiping);
+            setEnableScroll(() => swiping);
         }
     }
 
+
+    const data = useSelector((state: State) => state.data);
+
+    const getItemCount = (items: CategoryClass[]): number => {
+        return items.length;
+    }
+    const getItem = (items:CategoryClass[], idx:number) => {
+        return items[idx];
+    }
 
 
     return (
@@ -24,11 +46,16 @@ const MainScreen: FC = () => {
                 <Text style={styles.title}>Задачи</Text>
                 <Appbar.Action icon="shape-outline" onPress={() => setModal(!modal)}/>
             </Appbar.Header>
-            <FlatList data={data}
+            {data.length?
+                <>
+            <VirtualizedList data={data}
+                             getItemCount={getItemCount}
+                             getItem={getItem}
                       scrollEnabled={enableScroll}
-                      keyExtractor={(item) => `root${item.id.toString()}`}
+                      keyExtractor={(item:CategoryClass) => `root${item.id.toString()}`}
                       renderItem={({item}) => <Category
                                                         key={`${item.id.toString()}`}
+                                                        openTask={openTask}
                                                         onSwipe={onSwipeEvent}
                                                         title={item.title}
                                                         todos={item.todos}
@@ -40,6 +67,8 @@ const MainScreen: FC = () => {
                 icon="plus"
                 onPress={() => console.log('Pressed')}
             />
+                </>
+            : null}
             <ModalWindow modal={modal} setModal={setModal} data={data}/>
         </View>
     )
