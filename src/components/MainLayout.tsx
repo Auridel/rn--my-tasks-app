@@ -6,14 +6,15 @@ import {Todos} from "../classTransformer/classes";
 
 const MainLayout: FC = () => {
     const [task, setTask] = useState<null | Todos>(null);
+    const [openEdit, setOpenEdit] = useState(false);
 
     const openTask = (todo: Todos | null): void => {
         setTask(todo);
     }
 
-    if(task) return <TaskScreen openTask={openTask} todo={task}/>
+    if(task || openEdit) return <TaskScreen openTask={openTask} todo={task} openEdit={setOpenEdit}/>
 
-    return <MainScreen openTask={openTask}/>
+    return <MainScreen openTask={openTask} openEdit={setOpenEdit}/>
 
 }
 

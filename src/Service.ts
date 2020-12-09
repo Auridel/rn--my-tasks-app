@@ -5,20 +5,20 @@ export default class Service {
     static async addList(title: string){
         return await req("http://mobile-dev.oblakogroup.ru/candidate/olegefimov/list", "POST", {title})
     }
-    static async deleteList(id: number){
+    static async deleteList(id: number | string){
         return await req(`http://mobile-dev.oblakogroup.ru/candidate/olegefimov/list/${id}`, "DELETE")
     }
-    static async editList(title: string, id: number){
+    static async editList(title: string, id: number | string){
         return await req(`http://mobile-dev.oblakogroup.ru/candidate/olegefimov/list/${id}`, "PATCH", {title})
     }
-    static async addTodo(text: string, id: number){
+    static async addTodo(text: string, id: number | string, checked: boolean){
         return await req(`http://mobile-dev.oblakogroup.ru/candidate/olegefimov/list/${id}/todo`,
-            "POST", {text, checked: false})
+            "POST", {text, checked})
     }
     static async deleteTodo(listId: number, todoId: number){
         return await req(`http://mobile-dev.oblakogroup.ru/candidate/olegefimov/list/${listId}/todo/${todoId}`, "DELETE")
     }
-    static async updateTodo(text: string, listId: number, todoId: number, checked: boolean) {
+    static async updateTodo(text: string, listId: number | string, todoId: number, checked: boolean) {
         return await req(`http://mobile-dev.oblakogroup.ru/candidate/olegefimov/list/${listId}/todo/${todoId}`,
             "PATCH", {text, checked});
     }
@@ -35,5 +35,5 @@ async function req(url: string, method: string, data?: object) {
     if(data) config.body = JSON.stringify(data);
 
     const res = await fetch(url, config);
-    return await res.json();
+    if(method === "POST" || method === "GET") return await res.json();
 }

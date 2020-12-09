@@ -1,6 +1,6 @@
 import React, {FC, useState} from "react";
 import {StyleSheet, View} from "react-native";
-import {List} from "react-native-paper";
+import {List, Text} from "react-native-paper";
 import Accordion from "./ui/Accordion";
 import {Todos} from "../classTransformer/classes";
 import {mainTheme} from "../theme";
@@ -18,6 +18,7 @@ type Props = {
 const Category: FC<Props> = ({title, todos, id, onSwipe, openTask}) => {
     const [expanded, setExpanded] = useState(false);
 
+
     const completedTodos = todos.filter(todo => todo.checked);
     const uncompletedTodos = todos.filter(todo => !todo.checked);
 
@@ -30,11 +31,11 @@ const Category: FC<Props> = ({title, todos, id, onSwipe, openTask}) => {
         <List.Section>
             <View>
                 <List.Subheader>{title}</List.Subheader>
-                <ListItem data={uncompletedTodos}
+                {uncompletedTodos.length? <ListItem data={uncompletedTodos}
                           openTask={openTask}
                           id={id.toString()}
                           icon="checkbox-blank-circle-outline"
-                          completed={false} onSwipe={onSwipe}/>
+                          completed={false} onSwipe={onSwipe}/> : null}
                 <Accordion id={id.toString()}
                            title="Завершенные"
                            titleStyle={accordionTextStyle}
@@ -43,7 +44,11 @@ const Category: FC<Props> = ({title, todos, id, onSwipe, openTask}) => {
                                if(completedEmpty) setExpanded(!expanded);
                            }}
                 >
-                    <ListItem data={completedTodos} icon="check" id={"completed" + id.toString()} completed={true} onSwipe={onSwipe} openTask={openTask}/>
+                    <ListItem data={completedTodos}
+                              icon="check"
+                              id={"completed" + id.toString()}
+                              completed={true} onSwipe={onSwipe}
+                              openTask={openTask}/>
                 </Accordion>
             </View>
         </List.Section>

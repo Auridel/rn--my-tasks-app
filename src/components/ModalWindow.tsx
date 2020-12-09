@@ -1,13 +1,25 @@
 import React, {Dispatch, FC, SetStateAction, useState} from "react";
-import {FlatList, Text, View, StyleSheet, TouchableOpacity, KeyboardAvoidingView, Platform, TouchableWithoutFeedback, Keyboard} from "react-native";
-import {List, Modal, TextInput} from "react-native-paper";
-import SwipeButton from "./ui/SwipeButton";
+import {useDispatch} from "react-redux";
+import {
+    Text,
+    View,
+    StyleSheet,
+    TouchableOpacity,
+    KeyboardAvoidingView,
+    Platform,
+    TouchableWithoutFeedback,
+    Keyboard,
+    ScrollView
+} from "react-native";
+import {List, Modal, Portal} from "react-native-paper";
+import ListButton from "./ui/ListButton";
 import {mainTheme} from "../theme";
+import {CategoryClass} from "../classTransformer/classes";
+import {ADD_LIST, DELETE_LIST, EDIT_LIST} from "../redux/actions";
+
 // @ts-ignore
 import Icon from "react-native-vector-icons/Feather";
-
-import {CategoryClass} from "../classTransformer/classes";
-
+import EditField from "./EditField";
 
 
 type Props = {
@@ -20,7 +32,31 @@ const ModalWindow: FC<Props> = ({modal, setModal, data}) => {
     const [banner, setBanner] = useState(false);
     const [text, setText] = useState("");
 
+    const [edit, setEdit] = useState<null | number>(null);
+    const [title, setTitle] = useState("");
+
+    const dispatch = useDispatch();
+
+
+    const saveHandler = () => {
+        if(text.trim()) {
+            dispatch(ADD_LIST(text));
+            setText("");
+            setBanner(false);
+        }
+    }
+    const deleteHandler = (id: number) => {
+        dispatch(DELETE_LIST(id));
+    }
+    const editHandler = () => {
+        if(title.trim() && edit){
+            dispatch(EDIT_LIST(title, edit));
+            setEdit(null);
+        }
+    }
+
     return (
+        <Portal>
         <Modal visible={modal}
                contentContainerStyle={styles.modal}
                onDismiss={() => {
@@ -30,46 +66,48 @@ const ModalWindow: FC<Props> = ({modal, setModal, data}) => {
                dismissable>
             <KeyboardAvoidingView
                 behavior="position"
-                keyboardVerticalOffset={Platform.OS === "ios"? 300 : 0}
+                keyboardVerticalOffset={Platform.OS === "ios"? 350 : 0}
 
             >
                 <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-                    <View style={styles.modalWrap}>
-                        {data.length? <FlatList data={data} keyExtractor={(item) => `modal${item.id}`}
-                                  renderItem={({item}) => <List.Item
-                                      title={item.title}
-                                      right={() => <SwipeButton icon="trash-2"
-                                                                color={mainTheme.colors.error}
-                                                                onPress={() => console.log("delete" + item.id)}
-                                                                id={item.id}
-                                                                buttonStyle={{}}/>}
-                                  />}
-                        /> : null}
+                    <ScrollView style={styles.modalWrap} keyboardShouldPersistTaps="handled" keyboardDismissMode="none">
+                        <View style={{flex: 1, paddingBottom: 50}}>
+                        {data.length?
+                            data.map((el: CategoryClass): React.ReactNode => <TouchableOpacity key={el.id.toString()} onLongPress={() => {
+                                setEdit(el.id);
+                                setTitle(el.title);
+                            }}>
+                                {(edit && el.id === edit)? <EditField saveHandler={editHandler} value={title} setValue={setTitle}/>
+                                    :
+                                    <List.Item
+                                          title={el.title}
+                                          right={() => <ListButton icon="trash-2"
+                                                                   color={mainTheme.colors.error}
+                                                                   item={el}
+                                                                   onPress={() => deleteHandler(el.id)}/>}
+                                    /> }
+                                    </TouchableOpacity>)
+                            : null}
 
                         {banner &&
-                            <View style={styles.inputWrap}>
-                                <TextInput style={styles.textInput}
-                                           placeholder="Введите название"
-                                           value={text}
-                                           onChangeText={setText}
-                                           autoFocus
-                                />
-                                <TouchableOpacity activeOpacity={0.7} onPress={() => console.log(text)}>
-                                    <Icon name="check" size={25} color={mainTheme.colors.accent}/>
-                                </TouchableOpacity>
-                            </View>
+                            <EditField saveHandler={saveHandler} value={text} setValue={setText}/>
                         }
 
-                        <TouchableOpacity activeOpacity={0.7} onPress={() => setBanner(!banner)}>
+                        <TouchableOpacity activeOpacity={0.7} onPress={() => {
+                            setText("");
+                            setBanner(!banner);
+                        }}>
                             <View style={styles.addCategory}>
                                 <Text style={styles.addText}>Новая категория</Text>
                                 <Icon name="plus" size={25} color={mainTheme.colors.disabled}/>
                             </View>
                         </TouchableOpacity>
-                    </View>
+                        </View>
+                    </ScrollView>
                 </TouchableWithoutFeedback>
             </KeyboardAvoidingView>
         </Modal>
+        </Portal>
     )
 }
 
@@ -77,15 +115,15 @@ const ModalWindow: FC<Props> = ({modal, setModal, data}) => {
 const styles = StyleSheet.create({
     modal: {
         position: "absolute",
-        zIndex: 2,
-        width: "100%",
 
+        width: "100%",
+        height: 300,
         bottom: 0
     },
     modalWrap: {
         paddingHorizontal: 20,
         paddingTop: 25,
-        paddingBottom: 20,
+        paddingBottom: 40,
         borderTopLeftRadius: 5,
         borderTopRightRadius: 5,
         backgroundColor: mainTheme.colors.background
@@ -101,20 +139,6 @@ const styles = StyleSheet.create({
     addText: {
         fontSize: 16,
         color: mainTheme.colors.disabled
-    },
-    inputWrap: {
-        width: "100%",
-        alignItems: "center",
-        justifyContent: "center",
-        flexDirection: "row",
-        paddingLeft: 15,
-        paddingRight: 30,
-    },
-    textInput: {
-        flex: 1,
-        marginRight: 20,
-        backgroundColor: mainTheme.colors.background,
-        borderBottomWidth: 0
     }
 })
 

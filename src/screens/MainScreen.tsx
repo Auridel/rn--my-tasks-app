@@ -1,7 +1,7 @@
-import React, {FC, useEffect, useState, useContext} from "react";
+import React, {FC, useEffect, useState, useContext, Dispatch, SetStateAction} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {StyleSheet, View, VirtualizedList} from "react-native";
-import {Appbar, FAB, Text} from "react-native-paper";
+import {Appbar, FAB, Text, Portal} from "react-native-paper";
 import Category from "../components/Category";
 import ModalWindow from "../components/ModalWindow";
 import {GET_DATA} from "../redux/actions";
@@ -9,11 +9,12 @@ import {State} from "../types";
 import {CategoryClass, Todos} from "../classTransformer/classes";
 
 interface Props{
-    openTask: (todo: Todos | null) => void
+    openTask: (todo: Todos | null) => void,
+    openEdit: Dispatch<SetStateAction<boolean>>
 }
 
 
-const MainScreen: FC<Props> = ({openTask}) => {
+const MainScreen: FC<Props> = ({openTask, openEdit}) => {
     const [modal, setModal] = useState(false);
     const [enableScroll, setEnableScroll] = useState(true);
 
@@ -44,30 +45,31 @@ const MainScreen: FC<Props> = ({openTask}) => {
         <View style={styles.container}>
             <Appbar.Header style={styles.header}>
                 <Text style={styles.title}>Задачи</Text>
-                <Appbar.Action icon="shape-outline" onPress={() => setModal(!modal)}/>
+                <Appbar.Action icon="shape-outline"
+                               onPress={() => setModal(!modal)}/>
             </Appbar.Header>
             {data.length?
-                <>
-            <VirtualizedList data={data}
-                             getItemCount={getItemCount}
-                             getItem={getItem}
-                      scrollEnabled={enableScroll}
-                      keyExtractor={(item:CategoryClass) => `root${item.id.toString()}`}
-                      renderItem={({item}) => <Category
-                                                        key={`${item.id.toString()}`}
-                                                        openTask={openTask}
-                                                        onSwipe={onSwipeEvent}
-                                                        title={item.title}
-                                                        todos={item.todos}
-                                                        id={item.id}/>}
-            />
-            <FAB
-                visible={!modal}
-                style={styles.fab}
-                icon="plus"
-                onPress={() => console.log('Pressed')}
-            />
-                </>
+            <>
+                <VirtualizedList data={data}
+                                 getItemCount={getItemCount}
+                                 getItem={getItem}
+                                 scrollEnabled={enableScroll}
+                                 keyExtractor={(item:CategoryClass) => `root${item.id.toString()}`}
+                                 renderItem={({item}) => <Category
+                                                            key={`${item.id.toString()}`}
+                                                            openTask={openTask}
+                                                            onSwipe={onSwipeEvent}
+                                                            title={item.title}
+                                                            todos={item.todos}
+                                                            id={item.id}/>}
+                />
+                <FAB
+                    visible={!modal}
+                    style={styles.fab}
+                    icon="plus"
+                    onPress={() => openEdit(true)}
+                />
+            </>
             : null}
             <ModalWindow modal={modal} setModal={setModal} data={data}/>
         </View>

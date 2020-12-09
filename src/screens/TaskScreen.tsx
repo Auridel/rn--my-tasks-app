@@ -1,53 +1,80 @@
-import React, {FC, useState} from "react";
+import React, {Dispatch, FC, SetStateAction, useState} from "react";
 import {useSelector, useDispatch} from "react-redux";
-import {StyleSheet, View, TouchableOpacity} from "react-native";
+import {StyleSheet, View, TouchableOpacity, Keyboard, TouchableWithoutFeedback, ScrollView} from "react-native";
 import {Appbar, List, TextInput, RadioButton, Text} from "react-native-paper";
 import {mainTheme} from "../theme";
 import {State} from "../types";
 import {Todos, CategoryClass} from "../classTransformer/classes";
+import {ADD_TODO, UPDATE_TODO} from "../redux/actions";
 
 interface Props{
-    todo: Todos,
-    openTask: (todo: Todos | null) => void
+    todo?: Todos | null,
+    openTask: (todo: Todos | null) => void,
+    openEdit: Dispatch<SetStateAction<boolean>>
 }
 
-const TaskScreen: FC<Props> = ({openTask, todo}) => {
-    const [category, setCategory] = useState<string>(todo.listId.toString());
-    const [text, setText] = useState(todo.text);
-
-    const dispatch = useDispatch();
+const TaskScreen: FC<Props> = ({openTask, todo= null, openEdit}) => {
     const data = useSelector((state: State) => state.data);
+    const defaultCat = data.length? data[0].id.toString() : "";
+
+    const [category, setCategory] = useState<string>(todo? todo.listId.toString() : defaultCat);
+    const [text, setText] = useState(todo? todo.text : "");
+    const dispatch = useDispatch();
+
+    const editHandler = () => {
+        if(todo){
+            if(text.trim()) {
+                dispatch(UPDATE_TODO(text, category, todo));
+                openTask(null);
+            }
+        }else {
+            if(text.trim()) {
+                dispatch(ADD_TODO(text, category, false));
+                openEdit(false);
+            }
+        }
+    }
 
     return (
         <View>
-            <View style={styles.container}>
-                <Appbar.Header style={styles.header}>
-                    <Appbar.Action icon="arrow-left" onPress={() => openTask(null)}/>
-                    <Appbar.Action icon="check" color={mainTheme.colors.accent} onPress={() => console.log("back")}/>
-                </Appbar.Header>
-                <TextInput
-                    value={text}
-                    onChangeText={setText}
-                    placeholder="Название задачи"
-                    style={styles.textInput}
-                    autoFocus
-                />
-                <View style={styles.listWrap}>
-                    <List.Subheader style={styles.listHeader}>Категория</List.Subheader>
-                    <RadioButton.Group onValueChange={newValue => setCategory(newValue)} value={category}>
-                        {data.map((list: CategoryClass) => {
-                            return (
-                                <TouchableOpacity key={list.id.toString()} activeOpacity={0.8} onPress={() => setCategory(list.id.toString())}>
-                                    <View style={styles.radio}>
-                                        <Text style={styles.radioLabel}>{list.title}</Text>
-                                        <RadioButton.Android value={list.id.toString()} />
-                                    </View>
-                                </TouchableOpacity>
-                            )
-                        })}
-                </RadioButton.Group>
+            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                <View style={styles.container}>
+                    <Appbar.Header style={styles.header}>
+                        <Appbar.Action icon="arrow-left" onPress={() => {
+                            setText("");
+                            openTask(null);
+                            openEdit(false);
+                        }}/>
+                        <Appbar.Action icon="check" color={mainTheme.colors.accent} onPress={editHandler}/>
+                    </Appbar.Header>
+                    <TextInput
+                        underlineColor="transparent"
+                        value={text}
+                        onChangeText={setText}
+                        placeholder="Название задачи"
+                        style={styles.textInput}
+                        autoFocus
+                    />
+                    <ScrollView style={styles.listWrap}>
+                        <List.Subheader style={styles.listHeader}>Категория</List.Subheader>
+                        <RadioButton.Group onValueChange={newValue => setCategory(newValue)}
+                                           value={category}>
+                            {data.map((list: CategoryClass): React.ReactNode => {
+                                return (
+                                    <TouchableOpacity key={list.id.toString()}
+                                                      activeOpacity={0.8}
+                                                      onPress={() => setCategory(list.id.toString())}>
+                                        <View style={styles.radio}>
+                                            <Text style={styles.radioLabel}>{list.title}</Text>
+                                            <RadioButton.Android value={list.id.toString()} />
+                                        </View>
+                                    </TouchableOpacity>
+                                )
+                            })}
+                    </RadioButton.Group>
+                    </ScrollView>
                 </View>
-            </View>
+            </TouchableWithoutFeedback>
         </View>
     )
 }
@@ -65,7 +92,8 @@ const styles = StyleSheet.create({
     textInput: {
         marginHorizontal: 25,
         backgroundColor: mainTheme.colors.background,
-        fontSize: 20
+        fontSize: 20,
+        borderBottomWidth: 0
     },
     listWrap: {
         marginHorizontal: 20

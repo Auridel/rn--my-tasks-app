@@ -2,11 +2,11 @@ import React, {FC} from "react";
 import {useDispatch} from "react-redux";
 import {List} from "react-native-paper";
 import {StyleSheet, View, Dimensions} from "react-native";
-import {SwipeListView, SwipeRow} from 'react-native-swipe-list-view';
-import SwipeButton from "./ui/SwipeButton";
+import {SwipeListView} from 'react-native-swipe-list-view';
+import SwipeIcon from "./ui/SwipeIcon";
 import {Todos} from "../classTransformer/classes";
 import {mainTheme} from "../theme";
-import {CHECK_TODO} from "../redux/actions";
+import {CHECK_TODO, DELETE_TODO} from "../redux/actions";
 
 type Props = {
     data: Todos[],
@@ -22,7 +22,7 @@ interface swipeObj {
     direction: string
 }
 
-const actionWidth = Dimensions.get("window").width / 2;
+const actionWidth = Dimensions.get("window").width * 0.5;
 
 
 const ItemList: FC<Props> = ({data, icon, completed,id, onSwipe, openTask}) => {
@@ -33,14 +33,16 @@ const ItemList: FC<Props> = ({data, icon, completed,id, onSwipe, openTask}) => {
         if(todo) openTask(todo);
     }
 
-    const deleteHandler = (id: number): void => {
-        console.log(id)
+    const deleteHandler = (key: string): void => {
+        const todo = data.find(el => el.id.toString() === key);
+        if(todo) dispatch(DELETE_TODO(todo));
     }
 
     const onSwipeValueChange = ({key, value, direction}: swipeObj) => {
-        if(direction === "left" && value < -actionWidth) console.log("del " + key);
+        if(direction === "left" && value < -actionWidth) deleteHandler(key);
         if(direction === "right" && value > actionWidth) editTodo(key);
     }
+
 
     return (
         <View>
@@ -66,16 +68,15 @@ const ItemList: FC<Props> = ({data, icon, completed,id, onSwipe, openTask}) => {
                 />
             )}
             renderHiddenItem={ (data, rowMap) => (
-                <View
-                    style={styles.rowBack}>
-                    <SwipeButton color={mainTheme.colors.disabled}
-                                 icon="edit-3"
-                                 buttonStyle={styles.buttonLeft}/>
-                    <SwipeButton color={mainTheme.colors.error}
-                                 icon="trash-2"
-                                 buttonStyle={styles.buttonRight}/>
-                </View>
-            )}
+                    <View
+                        style={{...styles.rowBack}}>
+                        <SwipeIcon color={mainTheme.colors.disabled}
+                                   icon="edit-3"/>
+                        <SwipeIcon color={mainTheme.colors.error}
+                                   icon="trash-2"/>
+                    </View>
+                )
+            }
 
 
         />
@@ -93,20 +94,13 @@ const styles = StyleSheet.create({
     listItem:{
         backgroundColor: "#fff",
         alignItems: "center",
+        borderLeftWidth: 1,
+        borderRightWidth: 1,
+        borderColor:  mainTheme.colors.disabled
     },
     completedText: {
         textDecorationLine: "line-through",
         color: mainTheme.colors.disabled
-    },
-    buttonLeft: {
-        borderRightWidth: 1,
-        borderColor: mainTheme.colors.disabled,
-        borderStyle: "solid",
-    },
-    buttonRight: {
-        borderLeftWidth: 1,
-        borderColor: mainTheme.colors.disabled,
-        borderStyle: "solid",
     }
 })
 
