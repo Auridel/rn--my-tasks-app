@@ -35,5 +35,7 @@ async function req(url: string, method: string, data?: object) {
     if(data) config.body = JSON.stringify(data);
 
     const res = await fetch(url, config);
+
+    if(res.status !== 200) throw new Error()
     if(method === "POST" || method === "GET") return await res.json();
 }

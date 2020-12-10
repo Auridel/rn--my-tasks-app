@@ -8,6 +8,8 @@ import {GET_DATA} from "../redux/actions";
 import {State} from "../types";
 import {CategoryClass, Todos} from "../classTransformer/classes";
 import NoTasks from "../components/NoTasks";
+import Loader from "../components/ui/Loader";
+import ErrorMessage from "../components/ErrorMessage";
 
 interface Props{
     openTask: (todo: Todos | null) => void,
@@ -34,9 +36,12 @@ const MainScreen: FC<Props> = ({openTask, openEdit}) => {
     }
 
     //достаем данные из редакс
-    const data = useSelector((state: State) => state.data);
+    const {data, loading, error} = useSelector((state: State) => state);
 
-    if(!data.length) return <NoTasks/> //если нет списков рендерим предложение создать новый
+
+    if(error) return <ErrorMessage/>
+    if(loading && !error) return <Loader/>
+    if(!data.length && !loading) return <NoTasks/> //если нет списков рендерим предложение создать новый
 
 
     const getItemCount = (items: CategoryClass[]): number => {

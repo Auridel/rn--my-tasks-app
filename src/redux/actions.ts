@@ -8,6 +8,17 @@ interface Check {
     checked: boolean
 }
 
+const THROW_ERROR = () => {
+    return {
+        type: "THROW_ERROR"
+    }
+}
+const CLEAR_ERROR = () => {
+    return {
+        type: "CLEAR_ERROR"
+    }
+}
+
 //получаем данные с сервера
 const GET_DATA = () => {
     return async (dispatch: Dispatch) => {
@@ -20,7 +31,9 @@ const GET_DATA = () => {
                 payload: data
             })
         }catch (e) {
-            console.log(e)
+            dispatch({
+                type: "THROW_ERROR"
+            })
         }
     }
 }
@@ -150,6 +163,8 @@ const EDIT_LIST = (title: string, id: string | number) => {
 
 
 export {
+    THROW_ERROR,
+    CLEAR_ERROR,
     GET_DATA,
     ADD_TODO,
     CHECK_TODO,

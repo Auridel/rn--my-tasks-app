@@ -10,6 +10,20 @@ const initialState: State = {
 
 const reducer = (state = initialState, action: Action): State => {
     switch (action.type) {
+        case "THROW_ERROR": {
+            return {
+                ...state,
+                loading: false,
+                error: true
+            }
+        }
+        case "CLEAR_ERROR": {
+            return {
+                ...state,
+                loading: true,
+                error: false
+            }
+        }
         case "GET_DATA": {
             return {
                 ...state,

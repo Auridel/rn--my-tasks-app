@@ -1,10 +1,12 @@
 {
   "expo": {
-    "name": "rn-todo-test-task",
-    "slug": "rn-todo-test-task",
+    "name": "My Tasks",
+    "slug": "rn-my-tasks-app",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
+    "platforms": ["ios", "android"],
+    "privacy": "public",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -17,13 +19,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rn-my-tasks.app",
+      "buildNumber": "1.0.0"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.rn_my_tasks.app",
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
