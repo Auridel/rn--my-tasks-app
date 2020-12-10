@@ -29,16 +29,16 @@ type Props = {
 }
 
 const ModalWindow: FC<Props> = ({modal, setModal, data}) => {
-    const [banner, setBanner] = useState(false);
-    const [text, setText] = useState("");
+    const [banner, setBanner] = useState(false);//поле для ввода названия списка открыто/закрыто
+    const [text, setText] = useState("");//название при добавлении нов. списка
 
-    const [edit, setEdit] = useState<null | number>(null);
-    const [title, setTitle] = useState("");
+    const [edit, setEdit] = useState<null | number>(null);//редактирование названия сущ. списка передается id списка
+    const [title, setTitle] = useState("");//название при редактировании сущ/ списка
 
     const dispatch = useDispatch();
 
 
-    const saveHandler = () => {
+    const saveHandler = () => {//если зн-ие не пустое - сохраняем
         if(text.trim()) {
             dispatch(ADD_LIST(text));
             setText("");
@@ -48,7 +48,7 @@ const ModalWindow: FC<Props> = ({modal, setModal, data}) => {
     const deleteHandler = (id: number) => {
         dispatch(DELETE_LIST(id));
     }
-    const editHandler = () => {
+    const editHandler = () => {//если зн-ие не пустое - сохраняем
         if(title.trim() && edit){
             dispatch(EDIT_LIST(title, edit));
             setEdit(null);
@@ -67,17 +67,22 @@ const ModalWindow: FC<Props> = ({modal, setModal, data}) => {
             <KeyboardAvoidingView
                 behavior="position"
                 keyboardVerticalOffset={Platform.OS === "ios"? 350 : 0}
-
             >
                 <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-                    <ScrollView style={styles.modalWrap} keyboardShouldPersistTaps="handled" keyboardDismissMode="none">
+                    <ScrollView style={styles.modalWrap}
+                                keyboardShouldPersistTaps="handled"
+                                keyboardDismissMode="none">
                         <View style={{flex: 1, paddingBottom: 50}}>
                         {data.length?
-                            data.map((el: CategoryClass): React.ReactNode => <TouchableOpacity key={el.id.toString()} onLongPress={() => {
-                                setEdit(el.id);
-                                setTitle(el.title);
-                            }}>
-                                {(edit && el.id === edit)? <EditField saveHandler={editHandler} value={title} setValue={setTitle}/>
+                            data.map((el: CategoryClass): React.ReactNode => <TouchableOpacity key={el.id.toString()}
+                                                                                               onLongPress={() => {
+                                                                                                   setEdit(el.id);
+                                                                                                   setTitle(el.title);
+                                                                                               }
+                                                                                               }>
+                                {(edit && el.id === edit)? <EditField saveHandler={editHandler}
+                                                                      value={title}
+                                                                      setValue={setTitle}/>
                                     :
                                     <List.Item
                                           title={el.title}
@@ -90,18 +95,24 @@ const ModalWindow: FC<Props> = ({modal, setModal, data}) => {
                             : null}
 
                         {banner &&
-                            <EditField saveHandler={saveHandler} value={text} setValue={setText}/>
+                            <EditField saveHandler={saveHandler}
+                                       value={text}
+                                       setValue={setText}/>
                         }
 
-                        <TouchableOpacity activeOpacity={0.7} onPress={() => {
-                            setText("");
-                            setBanner(!banner);
-                        }}>
-                            <View style={styles.addCategory}>
-                                <Text style={styles.addText}>Новая категория</Text>
-                                <Icon name="plus" size={25} color={mainTheme.colors.disabled}/>
-                            </View>
-                        </TouchableOpacity>
+                            <TouchableOpacity activeOpacity={0.7}
+                                              onPress={() => {
+                                                  setText("");
+                                                  setBanner(!banner);
+                                              }}>
+                                <View style={styles.addCategory}>
+                                    <Text style={styles.addText}>Новая категория</Text>
+                                    <Icon name="plus"
+                                          size={25}
+                                          color={mainTheme.colors.disabled}/>
+                                </View>
+                            </TouchableOpacity>
+
                         </View>
                     </ScrollView>
                 </TouchableWithoutFeedback>

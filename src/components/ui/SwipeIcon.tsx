@@ -13,7 +13,9 @@ const SwipeIcon: FC<Props> = ({icon, color}) => {
 
     return (
         <View style={styles.wrapper}>
-            <Icon name={icon} size={25} color={color}/>
+            <Icon name={icon}
+                  size={25}
+                  color={color}/>
         </View>
 
     )

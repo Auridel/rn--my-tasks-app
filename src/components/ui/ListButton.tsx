@@ -17,10 +17,14 @@ const ListButton: FC<Props> = ({icon, color, onPress, item}) => {
 
     return (
             <View style={styles.wrapper}>
-                <TouchableOpacity activeOpacity={0.5} onPress={() => {
-                    if(onPress) onPress(item)
-                }}>
-                    <Icon name={icon} size={25} color={color}/>
+                <TouchableOpacity activeOpacity={0.5}
+                                  onPress={() => {
+                                      if(onPress) onPress(item)
+                                  }}
+                >
+                    <Icon name={icon}
+                          size={25}
+                          color={color}/>
                 </TouchableOpacity>
             </View>
 

@@ -16,7 +16,10 @@ const ErrorMessage: FC = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.text}>Что-то пошло не так...</Text>
-            <Button icon="refresh" onPress={reloadHandler} color="#f2f2f2" mode="contained">
+            <Button icon="refresh"
+                    onPress={reloadHandler}
+                    color="#f2f2f2"
+                    mode="contained">
                 Обновить
             </Button>
         </View>

@@ -4,7 +4,7 @@ import {List} from "react-native-paper";
 import Accordion from "./ui/Accordion";
 import {Todos} from "../classTransformer/classes";
 import {mainTheme} from "../theme";
-import ListItem from "./LIstItem";
+import ListItem from "./ItemList";
 
 
 type Props = {
@@ -32,10 +32,11 @@ const Category: FC<Props> = ({title, todos, id, onSwipe, openTask}) => {
             <View>
                 <List.Subheader>{title}</List.Subheader>
                 {uncompletedTodos.length? <ListItem data={uncompletedTodos}
-                          openTask={openTask}
-                          id={id.toString()}
-                          icon="checkbox-blank-circle-outline"
-                          completed={false} onSwipe={onSwipe}/> : null}
+                                                    openTask={openTask}
+                                                    id={id.toString()}
+                                                    icon="checkbox-blank-circle-outline"
+                                                    completed={false}
+                                                    onSwipe={onSwipe}/> : null}
                 <Accordion id={id.toString()}
                            title="Завершенные"
                            titleStyle={accordionTextStyle}

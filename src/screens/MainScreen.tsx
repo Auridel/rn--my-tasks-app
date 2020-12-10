@@ -84,7 +84,9 @@ const MainScreen: FC<Props> = ({openTask, openEdit}) => {
             </>
             : null}
             {/*модальное окно по клику на кубики*/}
-            <ModalWindow modal={modal} setModal={setModal} data={data}/>
+            <ModalWindow modal={modal}
+                         setModal={setModal}
+                         data={data}/>
         </View>
     )
 }

@@ -35,6 +35,7 @@ const ItemList: FC<Props> = ({data, icon, completed,id, onSwipe, openTask}) => {
     const deleteHandler = (key: string): void => {
         const todo = data.find(el => el.id.toString() === key);
         if(todo) dispatch(DELETE_TODO(todo));
+        onSwipe(true);
     }
 
     //в зависимости от направления свайпа запускаем ред. или удаление
@@ -46,28 +47,28 @@ const ItemList: FC<Props> = ({data, icon, completed,id, onSwipe, openTask}) => {
 
     return (
         <View>
-        <SwipeListView
-            data={data}
-            onSwipeValueChange={onSwipeValueChange}
-            closeOnRowPress={true}
-            closeOnScroll={false}
-            onScrollEnabled={(isEnabled) => onSwipe(isEnabled)}
-            keyExtractor={item => `${item.id}`}
-            listKey={id}
-            renderItem={ (data, rowMap) => (
-                <List.Item title={data.item.text}
-                           key={`nest${data.item.id.toString()}`}
-                           style={styles.listItem}
-                           onPress={() => {
-                               if(!rowMap[data.item.id.toString()].isOpen){
-                                   dispatch(CHECK_TODO({item: data.item, checked: !data.item.checked}));
-                               }
-                           }}
-                           titleStyle={completed? styles.completedText : {}}
-                           left={props => <List.Icon {...props} color={completed? mainTheme.colors.accent : ""} icon={icon}/>}
-                />
-            )}
-            renderHiddenItem={ (data, rowMap) => (
+            <SwipeListView
+                data={data}
+                onSwipeValueChange={onSwipeValueChange}
+                closeOnRowPress={true}
+                closeOnScroll={false}
+                onScrollEnabled={(isEnabled) => onSwipe(isEnabled)}//блокируем прокрутку списка на верхнем уровне
+                keyExtractor={item => `${item.id}`}
+                listKey={id}
+                renderItem={ (data, rowMap) => (
+                    <List.Item title={data.item.text}
+                               key={`nest${data.item.id.toString()}`}
+                               style={styles.listItem}
+                               onPress={() => {
+                                   if(!rowMap[data.item.id.toString()].isOpen){
+                                       dispatch(CHECK_TODO({item: data.item, checked: !data.item.checked}));
+                                   }
+                               }}
+                               titleStyle={completed? styles.completedText : {}}
+                               left={props => <List.Icon {...props} color={completed? mainTheme.colors.accent : ""} icon={icon}/>}
+                    />
+                )}
+                renderHiddenItem={ (data, rowMap) => (
                     <View
                         style={{...styles.rowBack}}>
                         <SwipeIcon color={mainTheme.colors.disabled}
@@ -76,10 +77,10 @@ const ItemList: FC<Props> = ({data, icon, completed,id, onSwipe, openTask}) => {
                                    icon="trash-2"/>
                     </View>
                 )
-            }
+                }
 
 
-        />
+            />
         </View>
     )
 }

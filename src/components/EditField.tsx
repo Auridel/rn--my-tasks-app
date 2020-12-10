@@ -25,7 +25,9 @@ const EditField: FC<Props> = ({saveHandler, value, setValue}) => {
 
             />
             <TouchableOpacity activeOpacity={0.7} onPress={saveHandler}>
-                <Icon name="check" size={25} color={mainTheme.colors.accent}/>
+                <Icon name="check"
+                      size={25}
+                      color={mainTheme.colors.accent}/>
             </TouchableOpacity>
         </View>
     )

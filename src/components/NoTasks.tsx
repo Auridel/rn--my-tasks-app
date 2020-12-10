@@ -20,7 +20,9 @@ const NoTasks: FC = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.text}>У вас пока нет списков задач</Text>
-            {input && <EditField saveHandler={saveHandler} value={title} setValue={setTitle}/>}
+            {input && <EditField saveHandler={saveHandler}
+                                 value={title}
+                                 setValue={setTitle}/>}
             <Button icon="plus"
                     onPress={() => setInput(!input)}
                     mode="contained"

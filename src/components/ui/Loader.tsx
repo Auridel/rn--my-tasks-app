@@ -6,7 +6,8 @@ import {mainTheme} from "../../theme";
 const Loader: FC = () => {
     return (
         <View style={styles.container}>
-            <ActivityIndicator size="large" color={mainTheme.colors.accent}/>
+            <ActivityIndicator size="large"
+                               color={mainTheme.colors.accent}/>
         </View>
     )
 }
