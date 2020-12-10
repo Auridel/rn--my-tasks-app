@@ -1,6 +1,6 @@
 import React, {FC, useState} from "react";
 import {StyleSheet, View} from "react-native";
-import {List, Text} from "react-native-paper";
+import {List} from "react-native-paper";
 import Accordion from "./ui/Accordion";
 import {Todos} from "../classTransformer/classes";
 import {mainTheme} from "../theme";

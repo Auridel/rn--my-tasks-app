@@ -12,6 +12,7 @@ const MainLayout: FC = () => {
         setTask(todo);
     }
 
+    //если передаем таск на редактирование или создаем новый, открываем экран редактирования
     if(task || openEdit) return <TaskScreen openTask={openTask} todo={task} openEdit={setOpenEdit}/>
 
     return <MainScreen openTask={openTask} openEdit={setOpenEdit}/>

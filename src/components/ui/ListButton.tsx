@@ -4,7 +4,7 @@ import {TouchableOpacity, View, StyleSheet} from "react-native";
 // @ts-ignore
 import Icon from 'react-native-vector-icons/Feather'
 
-import {CategoryClass, Todos} from "../../classTransformer/classes";
+import {CategoryClass} from "../../classTransformer/classes";
 
 type Props = {
     icon: string,

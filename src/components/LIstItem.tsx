@@ -28,19 +28,19 @@ const actionWidth = Dimensions.get("window").width * 0.5;
 const ItemList: FC<Props> = ({data, icon, completed,id, onSwipe, openTask}) => {
     const dispatch = useDispatch();
 
-    const editTodo = (key: string): void => {
+    const editTodoHandler = (key: string): void => {
         const todo = data.find(el => el.id.toString() === key);
         if(todo) openTask(todo);
     }
-
     const deleteHandler = (key: string): void => {
         const todo = data.find(el => el.id.toString() === key);
         if(todo) dispatch(DELETE_TODO(todo));
     }
 
+    //в зависимости от направления свайпа запускаем ред. или удаление
     const onSwipeValueChange = ({key, value, direction}: swipeObj) => {
         if(direction === "left" && value < -actionWidth) deleteHandler(key);
-        if(direction === "right" && value > actionWidth) editTodo(key);
+        if(direction === "right" && value > actionWidth) editTodoHandler(key);
     }
 
 

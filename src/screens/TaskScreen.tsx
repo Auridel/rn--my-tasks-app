@@ -15,12 +15,14 @@ interface Props{
 
 const TaskScreen: FC<Props> = ({openTask, todo= null, openEdit}) => {
     const data = useSelector((state: State) => state.data);
-    const defaultCat = data.length? data[0].id.toString() : "";
+    const defaultCat = data.length? data[0].id.toString() : ""; //категория по умолчанию
 
     const [category, setCategory] = useState<string>(todo? todo.listId.toString() : defaultCat);
     const [text, setText] = useState(todo? todo.text : "");
+
     const dispatch = useDispatch();
 
+    //в зав-ти от того, добавляем ли мы новый таск или редактируем старый запускаем экшен
     const editHandler = () => {
         if(todo){
             if(text.trim()) {

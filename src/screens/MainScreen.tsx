@@ -7,6 +7,7 @@ import ModalWindow from "../components/ModalWindow";
 import {GET_DATA} from "../redux/actions";
 import {State} from "../types";
 import {CategoryClass, Todos} from "../classTransformer/classes";
+import NoTasks from "../components/NoTasks";
 
 interface Props{
     openTask: (todo: Todos | null) => void,
@@ -20,18 +21,23 @@ const MainScreen: FC<Props> = ({openTask, openEdit}) => {
 
     const dispatch = useDispatch();
 
+    //при монтировании забираем данные с сервера и кладем в редакс
     useEffect(() => {
         dispatch(GET_DATA());
     }, [])
 
+    //при свайпе блокируем прокрутку списка на верхнем уровне
     const onSwipeEvent = (swiping: boolean): void => {
         if(swiping !== enableScroll) {
             setEnableScroll(() => swiping);
         }
     }
 
-
+    //достаем данные из редакс
     const data = useSelector((state: State) => state.data);
+
+    if(!data.length) return <NoTasks/> //если нет списков рендерим предложение создать новый
+
 
     const getItemCount = (items: CategoryClass[]): number => {
         return items.length;
@@ -48,6 +54,7 @@ const MainScreen: FC<Props> = ({openTask, openEdit}) => {
                 <Appbar.Action icon="shape-outline"
                                onPress={() => setModal(!modal)}/>
             </Appbar.Header>
+            {/*если есть список рендерим его и кнопку добавления задач*/}
             {data.length?
             <>
                 <VirtualizedList data={data}
@@ -71,6 +78,7 @@ const MainScreen: FC<Props> = ({openTask, openEdit}) => {
                 />
             </>
             : null}
+            {/*модальное окно по клику на кубики*/}
             <ModalWindow modal={modal} setModal={setModal} data={data}/>
         </View>
     )

@@ -115,12 +115,12 @@ const ModalWindow: FC<Props> = ({modal, setModal, data}) => {
 const styles = StyleSheet.create({
     modal: {
         position: "absolute",
-
         width: "100%",
         height: 300,
         bottom: 0
     },
     modalWrap: {
+        height: 300,
         paddingHorizontal: 20,
         paddingTop: 25,
         paddingBottom: 40,

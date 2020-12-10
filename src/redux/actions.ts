@@ -8,7 +8,7 @@ interface Check {
     checked: boolean
 }
 
-
+//получаем данные с сервера
 const GET_DATA = () => {
     return async (dispatch: Dispatch) => {
         try {
@@ -40,12 +40,11 @@ const ADD_TODO = (text: string, category: string, checked: false) => {
         }
     }
 }
-
+//отмечаем как выполненное
 const CHECK_TODO = ({item, checked}: Check) => {
     return async (dispatch: Dispatch) => {
         try {
             await Service.updateTodo(item.text, item.listId, item.id, checked);
-
             dispatch({
                 type: "CHECK_TODO",
                 payload: {item, checked}
@@ -59,9 +58,10 @@ const CHECK_TODO = ({item, checked}: Check) => {
 const UPDATE_TODO = (text: string, listId: string, todo: Todos) => {
     return async (dispatch: Dispatch) => {
         try {
+            // при изменении категории
             if(todo.listId.toString() !== listId){
                 await Service.deleteTodo(todo.listId, todo.id);
-                const res = await Service.addTodo(text, listId, false);
+                const res = await Service.addTodo(text, listId, todo.checked);
                 const item = plainToClass(Todos, res);
                 dispatch({
                     type: "ADD_TODO",
@@ -72,6 +72,7 @@ const UPDATE_TODO = (text: string, listId: string, todo: Todos) => {
                     payload: {item: todo}
                 })
             }else {
+                //при редактировании в той же категории
                 await Service.updateTodo(text, listId, todo.id, todo.checked);
                 dispatch({
                     type: "EDIT_TODO",
